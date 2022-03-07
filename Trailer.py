@@ -1,6 +1,7 @@
 import pybullet as p
 import time
 import pybullet_data
+from Tire import Tire, TireList
 
 # Environment
 p.connect(p.GUI)
@@ -33,23 +34,43 @@ colBoxId = p.createCollisionShape(p.GEOM_BOX, halfExtents=[trailer_x/2, trailer_
 # Creates a cylinder
 colCylinderId = p.createCollisionShape(p.GEOM_CYLINDER, height=width, radius=radius)
 
-
 #Create object
 basePosition = [0, 0, 5]
 baseOrientation = [0, 0, 0, 1]
 tireOrientation = [1, 0, 0, 1]
 
+#Tires
+tire_pos = [[5, -0.8, tire_z], [5, 0.8, tire_z],
+            [-5, -0.8, tire_z], [-5, 0.8, tire_z],
+            [-4, -0.8, tire_z], [-4, 0.8, tire_z]]
+tires = []
+for pos in tire_pos:
+    tires.append( Tire(tire_mass, radius, width, pos) )
+
+link_list = TireList(tires)
+link_Masses = link_list.masses
+linkCollisionShapeIndices = link_list.collisionShapeIndices
+linkVisualShapeIndices = link_list.visualShapeIndices
+linkPositions = link_list.positions
+linkOrientations = link_list.orientations
+linkInertialFramePositions = link_list.inertialFramePositions
+linkInertialFrameOrientations = link_list.inertialFrameOrientations
+indices = link_list.indices
+jointTypes = link_list.jointTypes
+axis = link_list.axis
+
+
 # Multiple parts
-link_Masses = [1, 1]
-linkCollisionShapeIndices = [colCylinderId, colCylinderId]
-linkVisualShapeIndices = [1, 2]
-linkPositions = [[0, 0, tire_z], [5, 0, tire_z]]
-linkOrientations = [tireOrientation, tireOrientation]
-linkInertialFramePositions = [[0, 0, 0], [0, 0, 0]]
-linkInertialFrameOrientations = [[0, 0, 0, 1], [0, 0, 0, 1]]
-indices = [0, 0]
-jointTypes = [p.JOINT_REVOLUTE, p.JOINT_REVOLUTE]
-axis = [[0, 0, 1], [0, 0, 1]]
+# link_Masses = [1, 1]
+# linkCollisionShapeIndices = [colCylinderId, colCylinderId]
+# linkVisualShapeIndices = [1, 2]
+# linkPositions = [[0, 0, tire_z], [5, 0, tire_z]]
+# linkOrientations = [tireOrientation, tireOrientation]
+# linkInertialFramePositions = [[0, 0, 0], [0, 0, 0]]
+# linkInertialFrameOrientations = [[0, 0, 0, 1], [0, 0, 0, 1]]
+# indices = [0, 0]
+# jointTypes = [p.JOINT_REVOLUTE, p.JOINT_REVOLUTE]
+# axis = [[0, 0, 1], [0, 0, 1]]
 # cylinderUid = p.createMultiBody(tire_mass, colCylinderId, visualShapeId, basePosition, tireOrientation)
 
 # p.changeDynamics(cylinderUid,
